@@ -1,0 +1,67 @@
+package test.test;
+
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.Group;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.control.TextField;
+
+
+/* Made by George, Nick, Joe */
+
+public class App extends Application 
+{
+
+    @Override
+    public void start(Stage stage) 
+    {//make text objects for menu screen
+        Text title = new Text(150,70,"Darts, But Dice");
+        Text p1 = new Text(10,170,"Player 1: ");
+        Text p2 = new Text(10,220,"Player 2: ");
+        Text p3 = new Text(10,270,"Player 3: ");
+        
+     //make text boxes for players to type in their name
+        TextField p1Field = new TextField();
+        TextField p2Field = new TextField();
+        TextField p3Field = new TextField();
+        
+     
+     //change position
+      p1Field.setLayoutX(160);
+      p1Field.setLayoutY(150);
+      
+      p2Field.setLayoutX(160);
+      p2Field.setLayoutY(200);
+       
+      p3Field.setLayoutX(160);
+      p3Field.setLayoutY(250);
+        
+     //add a prompt
+        p1Field.setPromptText("Enter your name");
+        p2Field.setPromptText("Enter your name");
+        p3Field.setPromptText("Enter your name");
+        
+      //modifiy text objects
+        title.setFont(Font.font("Verdana", FontWeight.BOLD, 50));
+        p1.setFont(Font.font("Verdana", FontWeight.NORMAL, 25));
+        p2.setFont(Font.font("Verdana", FontWeight.NORMAL, 25));
+        p3.setFont(Font.font("Verdana", FontWeight.NORMAL, 25));
+        
+        //group and display objects on scene
+        Group root = new Group(title,p1,p2,p3,p1Field,p2Field,p3Field);
+        Scene scene = new Scene(root, 700, 500, Color.AZURE);
+        stage.setScene(scene);
+        stage.setTitle("Darts, But Dice");
+        stage.show(); 
+    }
+
+    public static void main(String[] args) 
+    {
+        launch();
+    }
+
+}
