@@ -1,0 +1,178 @@
+package test.test;
+
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.Group;
+import javafx.scene.control.Button;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.control.TextField;
+import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+
+/* Made by George, Nick, Joe */
+
+public class App extends Application 
+{
+    //name variables 
+    private String p1Name,p2Name,p3Name;
+    private int score1,score2,score3 = 0;
+    
+    @Override
+    public void start(Stage stage) 
+    {//make text objects for menu screen
+        Text title = new Text(150,70,"Darts, But Dice");
+        Text p1 = new Text(10,170,"Player 1: ");
+        Text p2 = new Text(10,220,"Player 2: ");
+        Text p3 = new Text(10,270,"Player 3: ");
+      
+        
+    //modifiy text objects
+        title.setFont(Font.font("Verdana", FontWeight.BOLD, 50));
+        p1.setFont(Font.font("Verdana", FontWeight.NORMAL, 25));
+        p2.setFont(Font.font("Verdana", FontWeight.NORMAL, 25));
+        p3.setFont(Font.font("Verdana", FontWeight.NORMAL, 25));
+        
+     //make text boxes for players to type in their name
+        TextField p1Field = new TextField();
+        TextField p2Field = new TextField();
+        TextField p3Field = new TextField();
+     
+     //make a button to contunue to next scene
+       Button contButton = new Button("Continue");
+       //change button pos
+       //add an event that will check to see if all text fields are full and then go to next stage
+        contButton.setLayoutX(600);
+        contButton.setLayoutY(450);
+        
+     //change position
+        p1Field.setLayoutX(160);
+        p1Field.setLayoutY(150);
+      
+        p2Field.setLayoutX(160);
+        p2Field.setLayoutY(200);
+       
+        p3Field.setLayoutX(160);
+        p3Field.setLayoutY(250);
+        
+     //add a prompt
+        p1Field.setPromptText("Enter your name");
+        p2Field.setPromptText("Enter your name");
+        p3Field.setPromptText("Enter your name");
+        
+      //add "enter key" event handler
+      
+      EventHandler<ActionEvent> eventHandler = new EventHandler<ActionEvent>()
+      {
+          @Override
+          public void handle(ActionEvent event)
+          {
+            //get the text inside box and change the player name to the current text
+             p1Name = p1Field.getText();
+          }
+      };
+      
+      EventHandler<ActionEvent> eventHandler2 = new EventHandler<ActionEvent>()
+      {
+          @Override
+          public void handle(ActionEvent event)
+          {
+            //get the text inside box and change the player name to the current text
+             p2Name = p2Field.getText();
+          }
+      };
+      
+      EventHandler<ActionEvent> eventHandler3 = new EventHandler<ActionEvent>()
+      {
+          @Override
+          public void handle(ActionEvent event)
+          {
+            //get the text inside box and change the player name to the current text
+             p3Name = p3Field.getText();
+          }
+      };
+      
+     
+      //bind the event handler
+       p1Field.setOnAction(eventHandler);
+       p2Field.setOnAction(eventHandler2);
+       p3Field.setOnAction(eventHandler3);
+      
+     //shapes for design
+        Rectangle square = new Rectangle(470,150,170,160);
+        square.setFill(Color.WHITE);
+        Circle c1 = new Circle(495,175,15);
+        Circle c2 = new Circle(555,230,15);
+        Circle c3 = new Circle(618,285,15);
+        Group shapes = new Group(square,c1,c2,c3);
+        
+     //group and display objects on scene
+        Group root = new Group(title,p1,p2,p3,p1Field,p2Field,p3Field,contButton,shapes);
+        Scene scene = new Scene(root, 700, 500, Color.AZURE);
+        stage.setScene(scene);
+        stage.setTitle("Darts, But Dice");
+        stage.show(); 
+        
+    
+    //when the continue button is clicked go 2 next stage
+         EventHandler<ActionEvent> buttonEvent = new EventHandler<ActionEvent>()
+      {
+          @Override
+          public void handle(ActionEvent event)
+          {
+               if (!p1Field.getText().isBlank()&&!p2Field.getText().isBlank()&&!p3Field.getText().isBlank())
+                {
+                    //if all the text fields are not empty then allow the continue button to go to
+                    //next stage
+                    //Make the second scene but display it using button event below
+                    Text pName1 = new Text(470,200,"NA");
+                    Text pName2 = new Text(550,200,"NA");
+                    Text pName3 = new Text(630,200,"NA");
+                    
+                    Text label1 = new Text(470,230,"NA");
+                    Text label2 = new Text(550,230,"NA");
+                    Text label3 = new Text(630,230,"NA");
+                    
+                    pName1.setText(p1Name);
+                    pName2.setText(p2Name);
+                    pName3.setText(p3Name);
+                    label1.setText(String.valueOf(score1));
+                    label2.setText(String.valueOf(score2));
+                    label3.setText(String.valueOf(score3));
+                    
+                    pName1.setFont(Font.font("Verdana", FontWeight.NORMAL, 15));
+                    pName2.setFont(Font.font("Verdana", FontWeight.NORMAL, 15));
+                    pName3.setFont(Font.font("Verdana", FontWeight.NORMAL, 15));
+                    label1.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+                    label2.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+                    label3.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+                    
+                    Group root2 = new Group(pName1,pName2,pName3,label1,label2,label3);
+                    Scene scene2 = new Scene(root2,700,500,Color.AZURE);
+        
+                    stage.setScene(scene2);
+                    stage.setTitle("Darts, But Dice Game");
+                    stage.show();
+                    //note: I figured out that instead of deleting stuff in the scene and adding them into the same scene,
+                    //its easier to just make a new scene and display it (doesnt require us to delete old scene)
+                } 
+          }
+      };
+        
+         //this binds the button event so when the button is clicked it checks to see if all players has entered their name
+         //if its true then it clears the scene.
+         
+         contButton.setOnAction(buttonEvent);
+    }
+
+    public static void main(String[] args) 
+    {
+        launch();
+    }
+
+}
