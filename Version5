@@ -1,0 +1,159 @@
+package dbd;
+
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
+import javafx.scene.shape.Rectangle;
+
+
+
+
+/**
+ * JavaFX App
+ */
+public class DBD extends Application {
+
+    @Override
+    public void start(Stage stage) 
+    {
+ //making new objects
+        BorderPane main = new BorderPane();
+        Label p1 = new Label("Player 1");
+        Label p2 = new Label("Player 2");
+        Label p3 = new Label("Player 3");
+        Label title = new Label("Darts, but Dice");
+        Button goButton = new Button("Go---->");
+        Rectangle p1Rect = new Rectangle(150,170,Color.RED);
+        Rectangle p2Rect = new Rectangle(150,170,Color.RED);
+        Rectangle p3Rect = new Rectangle(150,170,Color.RED);
+        TextField p1Field = new TextField();
+        TextField p2Field = new TextField();
+        TextField p3Field = new TextField();
+        VBox tower = new VBox();
+        VBox tower2 = new VBox();
+        VBox tower3 = new VBox();
+       
+//creating a stackpane to hold the shape and label together
+        StackPane pane = new StackPane();
+        StackPane pane2 = new StackPane();
+        StackPane pane3 = new StackPane();
+        
+        pane.getChildren().addAll(p1Rect,p1);
+        pane2.getChildren().addAll(p2Rect,p2);
+        pane3.getChildren().addAll(p3Rect,p3);
+        
+    //adding prompt text to text fields
+        p1Field.setPromptText("Enter your name");
+        p2Field.setPromptText("Enter your name");
+        p3Field.setPromptText("Enter your name");
+       
+        
+     //setting spacing and adding objects into the VBOx
+     
+       
+        tower.setPadding(new Insets(120));
+        tower2.setPadding(new Insets(120));
+        tower3.setPadding(new Insets(120));
+        
+        tower.getChildren().addAll(pane,p1Field);
+        tower2.getChildren().addAll(pane2,p2Field);
+        tower3.getChildren().addAll(pane3,p3Field);
+        
+  //sets the max width of the VBOX the same as the 1st VBOX
+        tower2.setMaxWidth(tower.getWidth());
+ //setting font
+        title.setFont(Font.font("Verdana", FontWeight.BOLD, 50));
+        p1.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
+        p2.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
+        p3.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
+
+//changing positions of the objects inside border pane
+        main.setLeft(tower); //putting the vbox inside left space in borderpane
+        main.setCenter(tower2);
+        main.setRight(tower3);
+        main.setTop(title);
+        main.setBottom(goButton);
+        BorderPane.setAlignment(p1,Pos.CENTER);
+        BorderPane.setAlignment(p2,Pos.CENTER);
+        BorderPane.setAlignment(p3,Pos.CENTER);
+        BorderPane.setAlignment(title,Pos.CENTER);
+        BorderPane.setAlignment(goButton,Pos.BASELINE_RIGHT);
+        BorderPane.setMargin(p1, new Insets(40,40,40,40));
+        BorderPane.setMargin(p2, new Insets(40,40,40,40));
+        BorderPane.setMargin(p3, new Insets(40,40,40,40));
+        BorderPane.setMargin(title, new Insets(40,40,40,40));
+        BorderPane.setMargin(goButton, new Insets(40,40,40,40));
+        
+     //design and color bakground
+        main.setStyle("-fx-background-color: linear-gradient(to top, yellow, red)");
+        goButton.setStyle("-fx-background-color: linear-gradient(to top, red, yellow)");
+        
+        
+        
+        EventHandler<ActionEvent> eventHandler = (ActionEvent event) -> {
+            //change color of current object's square
+            p1Rect.setFill(Color.GREEN);
+        };
+        EventHandler<ActionEvent> eventHandler2 = (ActionEvent event) -> {
+            //change color of current object's square
+            p2Rect.setFill(Color.GREEN);
+        };
+        
+    //after player 3 enters name, change color of scene
+         EventHandler<ActionEvent> eventHandler3 = (ActionEvent event) -> {
+             //change color of current object's square
+             p3Rect.setFill(Color.GREEN);
+             main.setStyle("-fx-background-color: linear-gradient(to right, yellow, green)");
+             goButton.setStyle("-fx-background-color: linear-gradient(to top, green, yellow)");
+        };
+           EventHandler<ActionEvent> NextScene = (ActionEvent event) -> {
+               //if all the text fields are not empty, get the name inside all text boxes and go 2 next scene
+               if (!p1Field.getText().isBlank()&&!p2Field.getText().isBlank()&&!p3Field.getText().isBlank())
+                {
+                    BorderPane main2 = new BorderPane();
+                    Scene scene2 = new Scene(main2,1300,800,Color.CORAL);
+                    stage.setScene(scene2);
+                    stage.setTitle("Darts, But Dice");
+                    stage.show();
+                }
+             
+        };
+        //bind the events
+        p1Field.setOnAction(eventHandler);
+        p2Field.setOnAction(eventHandler2);
+        p3Field.setOnAction(eventHandler3);
+        goButton.setOnAction(NextScene);
+        
+        
+        
+        
+        
+    //setting scene
+      Scene scene = new Scene(main,1300,800,Color.CORAL);
+      stage.setScene(scene);
+      stage.setTitle("Darts, But Dice");
+      stage.show();
+
+    }
+    //next thing: add a way to contrain the midle text field to a certain size equal to the ones on the left and right
+  
+    
+    public static void main(String[] args) 
+    {
+        launch();
+    }
+
+}
