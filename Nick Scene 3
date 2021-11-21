@@ -1,0 +1,72 @@
+//Darts but Dice Scene 3 Winner, Winner, Winner!
+
+
+
+/**
+* JavaFx App
+*/ 
+public class DBD extend Application {
+
+public static void main(String[] args)
+
+@Override
+public void start (Stage stage) 
+{
+
+Image img = new Image("http://cdn.onlinenewebfonts.com/svg/img 549558.png");
+ImageView imgView = new ImageView();
+imgView.setImage(img);
+
+//the BorderPane class  
+BorderPane bpane = new BorderPane(); //Implement the Size
+Label winner = new Label("Player 1");
+Label WinnerText = new Label("Winner Winner");
+
+Stage stage3 = new Stage (700, 700);
+
+//add Player 1 to pane
+pane.setCenter(Label winner);
+
+//add Winner Text to pane
+pane.setTop(Label WinnerText);
+
+//set Top for the stage {
+stage.setTop("Linear Gradient");
+
+//create stops
+Stop[] = {new Stop(0, Color.BLUE),
+          new Stop(0.5, Color.RED),
+          new Stop(1, Color.GREEN)};
+
+//create a Linear gradient object
+LinearGradient linear_gradient = new LinearGradient(0, 0, 1, 0, true, Cyclemethod.NO_CYCLE, stop);
+
+
+//set Center for the stage {
+stage.setCenter("Linear Gradient");
+
+//create stops
+Stop[] = {new Stop(0, Color.RED), 
+          new Stop(0.5, Color.PURPLE),
+          new Stop(1, Color.GREEN)};
+
+
+//create a Linear gradient object
+LinearGradient linear_gradient = new LinearGradient(0, 0, 1, 0, true, Cyclemethod.NO_CYCLE, stop);
+
+
+//design and color background
+pane.setStyle("-fx-background-color: linear-gradient(to top, yellow, green)");
+pane.setStyle("-fx-background-color: linear-gradient(to center, green, green)");
+
+//Title to the Stage
+stage.setTitle("Winner Screen");
+
+//Adding scene to stage
+stage.setScene(scene 3);
+
+//Displaying the stage
+stage.show();
+
+}
+}
