@@ -1,0 +1,611 @@
+package dbd;
+import java.util.Random;
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+//import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
+import javafx.scene.shape.Rectangle;
+
+
+
+
+/**
+ * JavaFX App
+ */
+public class DBD extends Application {
+  //"global variables"
+   private static int p1score,p2score,p3score, throwCount, playerNum, roundNum;
+   private static String p1name, p2name, p3name;
+
+   static void setP1Name(String name)
+   {p1name = name;};
+
+   static void setP2Name(String name)
+   {p2name = name;};
+
+   static void setP3Name(String name)
+   {p3name = name;};
+
+   static void setP1score(int num)
+   {p1score = num;};
+
+   static void setP2score(int num)
+   {p2score = num;};
+
+   static void setP3score(int num)
+   {p3score = num;};
+
+   static int getCurrentPlayer()
+   {return playerNum;};
+
+   static int getRoundNum()
+   {return roundNum;};
+
+   static int getThrowCount()
+   {return throwCount;};
+
+   static String getP1Name()
+   {return p1name;};
+
+    static String getP2Name()
+   {return p2name;};
+
+    static String getP3Name()
+   {return p3name;};
+
+   static int getP1score()
+   {return p1score;};
+
+   static int getP2score()
+   {return p2score;};
+
+   static int getP3score()
+   {return p3score;};
+   
+   //Throw precheck to keep all counters in line for proper scorekeeping and game function
+   static int throwPrecheck()
+   {
+      if (throwCount == 3)
+      { 
+         throwCount = 0;
+         playerNum++;
+      }
+      if(playerNum > 3)
+      {  
+         playerNum = 1;
+         roundNum++;
+      }
+      throwCount++;
+      return playerNum;
+   };
+   //Check to see if player has rolled to make their score negative, and adds the random roll back to their original score 
+   static int bustCheck(int testScore, int testRand)
+   {
+      if (testScore-testRand <0)
+      {   return testScore + testRand;}
+      else
+      {   return testScore - testRand;}
+   };
+   //method to get current player's score based on counters
+   static int scoreGetter(int playNum)
+   {
+      switch(playNum)
+      {
+      case 1:  return p1score;
+      case 2: return p2score;
+      case 3: return p3score;
+      default: return 0;
+
+      }
+
+    }
+    //method to set current player's score based on counters
+   static void scoreSetter(int playNum, int scoreSet)
+   {
+       switch(playNum)
+      {
+      case 1: setP1score(scoreSet);
+      case 2: setP2score(scoreSet);
+      case 3: setP3score(scoreSet);
+      default: break;
+
+      }
+   }
+   //checks to see if player wins
+   static void winCheck(int throwNum, int scoreToCheck, Stage stage,int playerNum)
+   {
+      if(throwNum == 3 && scoreToCheck == 0)
+      {  
+         //delete old stage
+         stage.close();
+         DBD.make3rdScene(playerNum);
+      }
+   }
+   //set up 3rd stage
+   static void make3rdScene(int playerNum)
+   {
+       
+        //the BorderPane class  
+        BorderPane bpane = new BorderPane(); 
+        Label winnerText = new Label("Congratulations! Winner Winner!!");
+        Label winner = new Label("player name Has won!");
+        Stage stage3 = new Stage();
+        Scene scene3 = new Scene(bpane,1300,800,Color.CORAL);
+      
+        //switch statment to keep track of who wins using player num
+        switch(playerNum)
+            {
+               case 1: winner.setText(DBD.getP1Name()+" Has Won!");
+                       break;
+               case 2: winner.setText(DBD.getP2Name()+" Has Won!");
+                       break;
+               case 3: winner.setText(DBD.getP3Name()+" Has Won!");
+                       break;
+               default: break;
+            }
+        
+        //add Player 1 to pane
+        bpane.setCenter(winner);
+        winner.setFont(Font.font("Verdana", FontWeight.BOLD, 30));
+        
+        //add Winner Text to pane
+        bpane.setTop(winnerText);
+        winnerText.setPadding(new Insets(20,20,20,20));
+        BorderPane.setAlignment(winnerText,Pos.CENTER);
+        winnerText.setFont(Font.font("Verdana", FontWeight.BOLD, 30));
+        
+        //design and color background
+        bpane.setStyle("-fx-background-color: linear-gradient(to bottom, white, yellow, green)");
+       
+        //Title to the Stage
+        stage3.setTitle("Winner Screen");
+
+        //Adding scene to stage
+        stage3.setScene(scene3);
+
+        //Displaying the stage
+        stage3.show();
+
+   }
+   static void make2ndScene()
+   {  
+      //SCENE 2 STUFF
+       Image img = new Image("http://cdn.onlinewebfonts.com/svg/img_549558.png");
+       ImageView imgView = new ImageView();
+       imgView.setImage(img);
+       BorderPane main2 = new BorderPane();
+        Label rules = new Label("Rules: Each Player starts with 301 points. The goal is to get to zero to win! You also get 3 rolls per turn. The First one to 0 wins!");
+        VBox leftPane = new VBox();
+        VBox rightPane = new VBox();
+        VBox scoreHolder = new VBox();
+        VBox diceTypes = new VBox();
+        VBox scores = new VBox();
+        HBox names = new HBox();
+        HBox dices = new HBox();
+        Random random = new Random();
+        roundNum = 1;
+        throwCount = 0;
+        playerNum = 1;
+
+        Label name1 = new Label(DBD.getP1Name()+":    "+ String.valueOf(DBD.getP1score()));
+        Label name2 = new Label(DBD.getP2Name()+":    "+ String.valueOf(DBD.getP2score()));
+        Label name3 = new Label(DBD.getP3Name()+":    "+ String.valueOf(DBD.getP3score()));
+        Label scoreLabel = new Label("Current Scores:");
+        Label diceType = new Label("Dice Types:");
+        Label showScore = new Label("You rolled: null");
+        Label showTurn = new Label(DBD.getP1Name()+" 's Turn. Rolls used: 0");
+        //setting spacing and changing font
+        leftPane.setSpacing(150);
+        rules.setWrapText(true);
+        rightPane.setPadding(new Insets(10,20,0,20));
+        leftPane.setPadding(new Insets(10,20,0,20));
+        leftPane.setPrefWidth(350);
+        dices.setSpacing(10);
+        diceTypes.setSpacing(20);
+        showTurn.setWrapText(true);
+
+        //dices
+        Button dice1 = new Button("0-6");
+        Button dice2 = new Button("0-25");
+        Button dice3 = new Button("0-50");
+        Button dice4 = new Button("0-100");
+
+        dice1.setPrefWidth(100);
+        dice1.setPrefHeight(100);
+        dice2.setPrefWidth(100);
+        dice2.setPrefHeight(100);
+        dice3.setPrefWidth(100);
+        dice3.setPrefHeight(100);
+        dice4.setPrefWidth(100);
+        dice4.setPrefHeight(100);
+
+        //set spacing for others
+        scores.setSpacing(50);
+        names.setSpacing(50);
+        scoreHolder.setSpacing(20);
+        rightPane.setSpacing(150);
+
+        //set font
+        name1.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
+        name2.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
+        name3.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
+        scoreLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 35));
+        diceType.setFont(Font.font("Verdana", FontWeight.BOLD, 35));
+        rules.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
+        showScore.setFont(Font.font("Verdana", FontWeight.BOLD, 35));
+        showTurn.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
+        
+        //add items inside vbox(top to bottom)
+        leftPane.getChildren().addAll(rules,diceTypes);
+        scores.getChildren().addAll(name1,name2,name3);
+
+        scoreHolder.getChildren().addAll(scoreLabel,scores);
+        rightPane.getChildren().addAll(scoreHolder,showScore,showTurn);
+        dices.getChildren().addAll(dice1,dice2,dice3,dice4);
+        diceTypes.getChildren().addAll(diceType,dices);
+
+     //setting the fit height and width of the image view 
+      imgView.setFitHeight(200); 
+      imgView.setFitWidth(200); 
+
+      //Setting the preserve ratio of the image view 
+      imgView.setPreserveRatio(true); 
+      
+        //add vboxes to the borderpane
+        main2.setLeft(leftPane);
+        main2.setRight(rightPane);
+        main2.setCenter(imgView);
+        Scene scene2 = new Scene(main2,1300,800,Color.CORAL);
+        main2.setStyle("-fx-background-color: linear-gradient(to right, lightblue, violet)");
+
+        //show new stage
+        Stage stage2 = new Stage();
+        stage2.setScene(scene2);
+        stage2.setTitle("Darts, But Dice");
+        stage2.show();
+        int roundCount = 1;
+        int throwCount = 0;
+        
+
+        EventHandler<ActionEvent> randNum1 = (ActionEvent event) -> {
+         //roll random # and do all checks
+            playerNum = throwPrecheck();
+            int num = random.nextInt(6 - 1) + 1;
+            int newScore;
+            
+            
+            newScore = bustCheck(scoreGetter(playerNum), num);
+            showScore.setText("You Rolled: "+String.valueOf(num));
+           
+            //set score and check for win
+            scoreSetter(playerNum, newScore);
+            winCheck(DBD.getThrowCount(), newScore, stage2, playerNum);
+ 
+            //update gui
+            switch(playerNum)
+            {
+                case 1: name1.setText(DBD.getP1Name()+":    "+ String.valueOf(DBD.getP1score()));
+                       showTurn.setText(DBD.getP1Name()+" 's Turn. Rolls used: "+DBD.getThrowCount());
+                       if(DBD.getThrowCount()==3)
+                       {
+                           showTurn.setText(DBD.getP2Name()+" is Next!");
+                       }
+                       break;
+               case 2: name2.setText(DBD.getP2Name()+":    "+ String.valueOf(DBD.getP2score()));
+                       showTurn.setText(DBD.getP2Name()+" 's Turn. Rolls used: "+DBD.getThrowCount());
+                       if(DBD.getThrowCount()==3)
+                       {
+                           showTurn.setText(DBD.getP3Name()+" is Next!");
+                       }
+                       break;
+               case 3: name3.setText(DBD.getP3Name()+":    "+ String.valueOf(DBD.getP3score()));
+                       showTurn.setText(DBD.getP3Name()+" 's Turn. Rolls used: "+DBD.getThrowCount());
+                       if(DBD.getThrowCount()==3)
+                       {
+                           showTurn.setText(DBD.getP1Name()+" is Next!");
+                       }
+                       break;
+               default: break;
+            }
+            //debug statement
+            //System.out.println("Player num "+getCurrentPlayer()+" Round "+getRoundNum()+" Throw "+getThrowCount());
+         };
+
+
+       EventHandler<ActionEvent> randNum2 = (ActionEvent event) -> {
+         //roll random # and do all checks
+            playerNum = throwPrecheck();
+            int num = random.nextInt(25 - 1) + 1;
+            int newScore;
+            newScore = bustCheck(scoreGetter(playerNum), num);
+            showScore.setText("You Rolled: "+String.valueOf(num));
+
+            //set score and check for win
+            scoreSetter(playerNum, newScore);
+            winCheck(DBD.getThrowCount(), newScore, stage2,playerNum);
+
+            //update gui
+            switch(playerNum)
+            {
+               case 1: name1.setText(DBD.getP1Name()+":    "+ String.valueOf(DBD.getP1score()));
+                       showTurn.setText(DBD.getP1Name()+" 's Turn. Rolls used: "+DBD.getThrowCount());
+                       if(DBD.getThrowCount()==3)
+                       {
+                           showTurn.setText(DBD.getP2Name()+" is Next!");
+                       }
+                       break;
+               case 2: name2.setText(DBD.getP2Name()+":    "+ String.valueOf(DBD.getP2score()));
+                       showTurn.setText(DBD.getP2Name()+" 's Turn. Rolls used: "+DBD.getThrowCount());
+                       if(DBD.getThrowCount()==3)
+                       {
+                           showTurn.setText(DBD.getP3Name()+" is Next!");
+                       }
+                       break;
+               case 3: name3.setText(DBD.getP3Name()+":    "+ String.valueOf(DBD.getP3score()));
+                       showTurn.setText(DBD.getP3Name()+" 's Turn. Rolls used: "+DBD.getThrowCount());
+                       if(DBD.getThrowCount()==3)
+                       {
+                           showTurn.setText(DBD.getP1Name()+" is Next!");
+                       }
+                       break;
+               default: break;
+            }
+
+            //debug statement
+            //System.out.println("Player num "+getCurrentPlayer()+" Round "+getRoundNum()+" Throw "+getThrowCount());
+         };
+
+
+         EventHandler<ActionEvent> randNum3 = (ActionEvent event) -> {
+         //roll random # and do all checks
+         playerNum = throwPrecheck();
+            int num = (random.nextInt(10 - 1) + 1)*5;
+            int newScore;
+            newScore = bustCheck(scoreGetter(playerNum), num);
+            showScore.setText("You Rolled: "+String.valueOf(num));
+
+            //set score and check for win
+            scoreSetter(playerNum, newScore);
+            winCheck(DBD.getThrowCount(), newScore, stage2, playerNum);
+
+            //update gui
+            switch(playerNum)
+            {
+              case 1: name1.setText(DBD.getP1Name()+":    "+ String.valueOf(DBD.getP1score()));
+                       showTurn.setText(DBD.getP1Name()+" 's Turn. Rolls used: "+DBD.getThrowCount());
+                       if(DBD.getThrowCount()==3)
+                       {
+                           showTurn.setText(DBD.getP2Name()+" is Next!");
+                       }
+                       break;
+               case 2: name2.setText(DBD.getP2Name()+":    "+ String.valueOf(DBD.getP2score()));
+                       showTurn.setText(DBD.getP2Name()+" 's Turn. Rolls used: "+DBD.getThrowCount());
+                       if(DBD.getThrowCount()==3)
+                       {
+                           showTurn.setText(DBD.getP3Name()+" is Next!");
+                       }
+                       break;
+               case 3: name3.setText(DBD.getP3Name()+":    "+ String.valueOf(DBD.getP3score()));
+                       showTurn.setText(DBD.getP3Name()+" 's Turn. Rolls used: "+DBD.getThrowCount());
+                       if(DBD.getThrowCount()==3)
+                       {
+                           showTurn.setText(DBD.getP1Name()+" is Next!");
+                       }
+                       break;
+               default: break;
+            }
+
+            //debug statement
+            //System.out.println("Player num "+getCurrentPlayer()+" Round "+getRoundNum()+" Throw "+getThrowCount());
+         };
+
+         EventHandler<ActionEvent> randNum4 = (ActionEvent event) -> {
+         //roll random # and do all checks
+         playerNum = throwPrecheck();
+            int num = (random.nextInt(20 - 1) + 1)*5;
+            int newScore;
+            newScore = bustCheck(scoreGetter(playerNum), num);
+            showScore.setText("You Rolled: "+String.valueOf(num));
+
+            //set score and check for win
+            scoreSetter(playerNum, newScore);
+            winCheck(DBD.getThrowCount(), newScore, stage2, playerNum);
+
+            //update gui
+            switch(playerNum)
+            {
+               case 1: name1.setText(DBD.getP1Name()+":    "+ String.valueOf(DBD.getP1score()));
+                       showTurn.setText(DBD.getP1Name()+" 's Turn. Rolls used: "+DBD.getThrowCount());
+                       if(DBD.getThrowCount()==3)
+                       {
+                           showTurn.setText(DBD.getP2Name()+" is Next!");
+                       }
+                       break;
+               case 2: name2.setText(DBD.getP2Name()+":    "+ String.valueOf(DBD.getP2score()));
+                       showTurn.setText(DBD.getP2Name()+" 's Turn. Rolls used: "+DBD.getThrowCount());
+                       if(DBD.getThrowCount()==3)
+                       {
+                           showTurn.setText(DBD.getP3Name()+" is Next!");
+                       }
+                       break;
+               case 3: name3.setText(DBD.getP3Name()+":    "+ String.valueOf(DBD.getP3score()));
+                       showTurn.setText(DBD.getP3Name()+" 's Turn. Rolls used: "+DBD.getThrowCount());
+                       if(DBD.getThrowCount()==3)
+                       {
+                           showTurn.setText(DBD.getP1Name()+" is Next!");
+                       }
+                       break;
+               default: break;
+
+            }
+
+            //debug statement
+            //System.out.println("Player num "+getCurrentPlayer()+" Round "+getRoundNum()+" Throw "+getThrowCount());
+         };
+
+        dice1.setOnAction(randNum1);
+        dice2.setOnAction(randNum2);
+        dice3.setOnAction(randNum3);
+        dice4.setOnAction(randNum4);
+
+   };
+
+
+    @Override
+    public void start(Stage stage) 
+    {
+ //making new objects
+        BorderPane main = new BorderPane();
+        Label p1 = new Label("Player 1");
+        Label p2 = new Label("Player 2");
+        Label p3 = new Label("Player 3");
+        Label title = new Label("Darts, but Dice");
+        Button goButton = new Button("Go---->");
+        Rectangle p1Rect = new Rectangle(150,170,Color.RED);
+        Rectangle p2Rect = new Rectangle(150,170,Color.RED);
+        Rectangle p3Rect = new Rectangle(150,170,Color.RED);
+        TextField p1Field = new TextField();
+        TextField p2Field = new TextField();
+        TextField p3Field = new TextField();
+        VBox tower = new VBox();
+        VBox tower2 = new VBox();
+        VBox tower3 = new VBox();
+
+//creating a stackpane to hold the shape and label together
+        StackPane pane = new StackPane();
+        StackPane pane2 = new StackPane();
+        StackPane pane3 = new StackPane();
+
+        pane.getChildren().addAll(p1Rect,p1);
+        pane2.getChildren().addAll(p2Rect,p2);
+        pane3.getChildren().addAll(p3Rect,p3);
+
+    //adding prompt text to text fields
+        p1Field.setPromptText("Enter your name");
+        p2Field.setPromptText("Enter your name");
+        p3Field.setPromptText("Enter your name");
+
+
+     //setting spacing and adding objects into the VBOx
+
+        tower.setPadding(new Insets(120));
+        tower2.setPadding(new Insets(120));
+        tower3.setPadding(new Insets(120));
+
+        tower.getChildren().addAll(pane,p1Field);
+        tower2.getChildren().addAll(pane2,p2Field);
+        tower3.getChildren().addAll(pane3,p3Field);
+
+  //sets the max width of the VBOX the same as the 1st VBOX
+        tower2.setMaxWidth(tower.getWidth());
+
+ //setting font
+        title.setFont(Font.font("Verdana", FontWeight.BOLD, 50));
+        p1.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
+        p2.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
+        p3.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
+
+//changing positions of the objects inside border pane
+        main.setLeft(tower); //putting the vbox inside left space in borderpane
+        main.setCenter(tower2);
+        main.setRight(tower3);
+        main.setTop(title);
+        main.setBottom(goButton);
+        BorderPane.setAlignment(p1,Pos.CENTER);
+        BorderPane.setAlignment(p2,Pos.CENTER);
+        BorderPane.setAlignment(p3,Pos.CENTER);
+        BorderPane.setAlignment(title,Pos.CENTER);
+        BorderPane.setAlignment(goButton,Pos.BASELINE_RIGHT);
+        BorderPane.setMargin(p1, new Insets(40,40,40,40));
+        BorderPane.setMargin(p2, new Insets(40,40,40,40));
+        BorderPane.setMargin(p3, new Insets(40,40,40,40));
+        BorderPane.setMargin(title, new Insets(40,40,40,40));
+        BorderPane.setMargin(goButton, new Insets(40,40,40,40));
+
+     //design and color bakground
+        main.setStyle("-fx-background-color: linear-gradient(to top, yellow, red)");
+        goButton.setStyle("-fx-background-color: linear-gradient(to top, red, yellow)");
+
+
+
+        //ALL EVENT HANDELERS
+        EventHandler<ActionEvent> eventHandler = (ActionEvent event) -> {
+            //change color of current object's square
+            p1Rect.setFill(Color.GREEN);
+
+         };
+        EventHandler<ActionEvent> eventHandler2 = (ActionEvent event) -> {
+            //change color of current object's square
+            p2Rect.setFill(Color.GREEN);
+        };
+
+    //after player 3 enters name, change color of scene
+         EventHandler<ActionEvent> eventHandler3 = (ActionEvent event) -> {
+             //change color of current object's square
+             p3Rect.setFill(Color.GREEN);
+             main.setStyle("-fx-background-color: linear-gradient(to right, yellow, green)");
+             goButton.setStyle("-fx-background-color: linear-gradient(to top, green, yellow)");
+        };
+           EventHandler<ActionEvent> NextScene = (ActionEvent event) -> {
+               //if all the text fields are not empty, get the name inside all text boxes and go 2 next scene
+               if (!p1Field.getText().isBlank()&&!p2Field.getText().isBlank()&&!p3Field.getText().isBlank())
+                {
+                  //get names
+                   DBD.setP1Name(p1Field.getText());
+                   DBD.setP2Name(p2Field.getText());
+                   DBD.setP3Name(p3Field.getText());
+
+                  //update score
+                  DBD.setP1score(301);
+                  DBD.setP2score(301);
+                  DBD.setP3score(301);
+                  
+                  //show next scene
+                  stage.close();
+                  DBD.make2ndScene();
+                   
+                }
+
+        };
+        //bind the events
+        p1Field.setOnAction(eventHandler);
+        p2Field.setOnAction(eventHandler2);
+        p3Field.setOnAction(eventHandler3);
+        goButton.setOnAction(NextScene);
+
+
+
+
+
+    //setting scene
+      Scene scene = new Scene(main,1300,800,Color.CORAL);
+      stage.setScene(scene);
+      stage.setTitle("Darts, But Dice");
+      stage.show();
+
+    }
+    //next thing: add a way to contrain the midle text field to a certain size equal to the ones on the left and right
+
+
+    public static void main(String[] args) 
+    {
+        launch();
+    }
+
+}
